@@ -1,1 +1,23 @@
 /*CSS file*/
+#memory-game li {
+  list-style: none;
+  height: 50px;
+  width: 50px;
+  background-color: gray;
+  margin: 10px;
+  float: left;
+}
+
+i.zmdi {
+  color: white;
+  font-size: 2em;
+}
+
+i.zmdi.zmdi-star, i.zmdi.zmdi-undo  {
+  color: black;
+  font-size: 2em;
+}
+
+.card.open {
+  background-color: #999;
+}
