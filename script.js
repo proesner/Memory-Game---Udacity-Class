@@ -1,17 +1,25 @@
-// javascript file
-var $mainControls = $('#main-controls');
 var $memoryGame = $('#memory-game');
+var $mainControls = $('#main-controls');
 var $restartBtn = $mainControls.find('#restart');
 var $movesEl = $mainControls.find('#moves span');
 var $ratingEl = $mainControls.find('#star-rating');
 
-var cardSymbol = ["bluetooth-connected", "bluetooth-connected", "camera-alt",
-                  "camera-alt", "dock", "dock", "gps-dot", "gps-dot",
-                  "headset-mic", "headset-mic"];
+var cardSymbol = ["bluetooth-connected", "bluetooth-connected",
+                  "camera-alt", "camera-alt",
+                  "dock", "dock",
+                  "gps-dot", "gps-dot",
+                  "headset-mic", "headset-mic",
+                  "smartphone-setting", "smartphone-setting",
+                  "gamepad", "gamepad",
+                  "network-locked", "network-locked",
+                  "videocam", "videocam",
+                  "car", "car",
+                  "twitter-box", "twitter-box",
+                  "closed-caption", "closed-caption"];
 var flipped = [];
 var match, moves;
 
-var cardCount = cardSymbol.length / 2;
+var cardPairs = cardSymbol.length / 2;
 
 // shuffle the deck
 // Reference: https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
@@ -37,7 +45,6 @@ function go() {
   for (var i = 0; i < cardSymbol.length; i++) {
     $memoryGame.append($('<li class="card"><i class="zmdi zmdi-' + cardSymbol[i] + '"></i></li>'));
   }
-  return moves;
 } 
 
 // set rating
@@ -45,20 +52,39 @@ function go() {
 
 // click card behavior
 // Reference: https://stackoverflow.com/questions/9478413/not-selector-on-click-event
-$memoryGame.on('click', '.card:not(".match, .open")', function() {
+$memoryGame.on('click', '.card:not(".match, .flipped")', function() {
+  var $this = $(this);
+  var card = $this.get(0).innerHTML;
+
   if($('.show').length > 1) {
     return true;
-    console.log('show greater than 1')
   }
-  var $this = $(this);
-  // var card = $this.context.innerHTML;
+
   $this.addClass('open show');
-  // match.push(card);
+  flipped.push(card);
 
-  if (flipped > 1) {
-
-  }
-
+  //compare with first flipped card
+  if (flipped.length > 1) {
+    if (card === flipped[0]) {
+      $memoryGame.find('.open').addClass('animated infinite bounce match');
+      setTimeout(function(){
+        $memoryGame.find('.match').removeClass('flipped show animated infinite bounce');
+      }, 1000);
+      match++; //verified match
+    } else {
+      $memoryGame.find('.open').addClass('animated infinite bounce nomatch');
+      setTimeout(function(){
+        $memoryGame.find('.open').removeClass('animated infinite bounce');
+      }, 1000);
+      setTimeout(function(){
+        $memoryGame.find('.open').removeClass('flipped show animated infinite nomatch');
+      }, 1000);
+      }
+      flipped = [];
+      moves++
+      // setRating(moves);
+      $movesEl.html(moves);
+    }
   moves++
   //setRating(moves);
   $movesEl.html(moves);
@@ -74,7 +100,7 @@ $restartBtn.on('click', function() {
 })
 
 //endgame if all cards are flipped
-if (cardCount === match) {
+if (cardPairs === match) {
   //setRating(moves);
   var score = score // to do, set score
   setTimeout (function() {
