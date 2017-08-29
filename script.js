@@ -1,23 +1,27 @@
 var $memoryGame = $('#memory-game');
+var $memoryGameEl = $memoryGame.find('i');
 var $mainControls = $('#main-controls');
 var $restartBtn = $mainControls.find('#restart');
 var $movesEl = $mainControls.find('#moves span');
 var $ratingEl = $mainControls.find('#star-rating');
+var $ratingElItems = $ratingEl.find('i');
 
-var cardSymbol = ["bluetooth-connected", "bluetooth-connected",
-                  "camera-alt", "camera-alt",
-                  "dock", "dock",
-                  "gps-dot", "gps-dot",
-                  "headset-mic", "headset-mic",
-                  "smartphone-setting", "smartphone-setting",
-                  "gamepad", "gamepad",
-                  "network-locked", "network-locked",
-                  "videocam", "videocam",
-                  "car", "car",
-                  "twitter-box", "twitter-box",
-                  "closed-caption", "closed-caption"];
+var cardSymbol = ["address-book", "address-book",
+                  "adjust", "adjust",
+                  "area-chart", "area-chart",
+                  "asl-interpreting", "asl-interpreting",
+                  "audio-description", "audio-description",
+                  "bank", "bank",
+                  "battery-4", "battery-4",
+                  "bell", "bell",
+                  "bluetooth", "bluetooth",
+                  "calculator", "calculator",
+                  "camera-retro", "camera-retro",
+                  "coffee", "coffee"];
+
 var flipped = [];
-var match, moves;
+var match = 0;
+var moves = 0;
 
 var cardPairs = cardSymbol.length / 2;
 
@@ -39,55 +43,61 @@ function go() {
   $memoryGame.empty();
   match, moves = 0;
   $movesEl.html(moves);
-  $
-  //moves.html(moves)
-  // $memoryGame.empty();
   for (var i = 0; i < cardSymbol.length; i++) {
-    $memoryGame.append($('<li class="card"><i class="zmdi zmdi-' + cardSymbol[i] + '"></i></li>'));
+    $memoryGame.append($('<li class="card white-shadow"><i class="fa fa-' + cardSymbol[i] + '"></i></li>'));
   }
-} 
+}
 
-// set rating
+// set star rating
+function setStarRating(moves) {
+  if (moves > 10 && moves < 20) {
+    $ratingElItems.eq(2).remove();
+  }
+  else if (moves > 21 && moves < 28) {
+    $ratingElItems.eq(1).remove();
+  }
+  else if (moves > 29) {
+    $ratingElItems.eq(0).removeClass('fa fa-diamond').html('Outta diamonds!');
+  }
+}
 
 
 // click card behavior
 // Reference: https://stackoverflow.com/questions/9478413/not-selector-on-click-event
-$memoryGame.on('click', '.card:not(".match, .flipped")', function() {
+$memoryGame.on('click', '.card:not(".match, .open")', function(e) {
   var $this = $(this);
   var card = $this.get(0).innerHTML;
 
-  if($('.show').length > 1) {
-    return true;
-  }
-
   $this.addClass('open show');
-  flipped.push(card);
+  flipped.push(card); //put i element into array, compare later
 
-  //compare with first flipped card
+  //compare with first flipped card, compare match or no match
   if (flipped.length > 1) {
     if (card === flipped[0]) {
+      // if match, add match class, animate and
       $memoryGame.find('.open').addClass('animated infinite bounce match');
-      setTimeout(function(){
-        $memoryGame.find('.match').removeClass('flipped show animated infinite bounce');
+      setTimeout(function() {
+        $memoryGame.find('.match').removeClass('open animated infinite bounce');
       }, 1000);
       match++; //verified match
     } else {
-      $memoryGame.find('.open').addClass('animated infinite bounce nomatch');
-      setTimeout(function(){
-        $memoryGame.find('.open').removeClass('animated infinite bounce');
+      // if not a match, animate
+      $memoryGame.find('.open').addClass('animated infinite jello nomatch');
+      setTimeout(function() {
+        $memoryGame.find('.open').removeClass('animated infinite jello');
+      }, 500);
+      //if not a match, hide flipped cards
+      setTimeout(function() {
+        $memoryGame.find('.open').removeClass('open nomatch animated infinite');
       }, 1000);
-      setTimeout(function(){
-        $memoryGame.find('.open').removeClass('flipped show animated infinite nomatch');
-      }, 1000);
-      }
-      flipped = [];
+    }
+
+      flipped = []; // reset flipped array to compare new set
       moves++
-      // setRating(moves);
+      setStarRating(moves);
       $movesEl.html(moves);
     }
-  moves++
-  //setRating(moves);
-  $movesEl.html(moves);
+    console.log('cardPairs= ' + cardPairs + ' match= ' + match);
 })
 
 //restart game
@@ -96,7 +106,7 @@ $restartBtn.on('click', function() {
     go();
 }, function() {
     return;
-});
+})
 })
 
 //endgame if all cards are flipped
@@ -104,7 +114,11 @@ if (cardPairs === match) {
   //setRating(moves);
   var score = score // to do, set score
   setTimeout (function() {
-    //trigger modal
+    alertify.confirm("Congrats! You've won in " + moves + " moves. Would you like to play again?", function () {
+      go();
+  }, function() {
+      return;
+  })
   }, 500);
 }
 

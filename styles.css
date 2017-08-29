@@ -1,17 +1,39 @@
 /*CSS file*/
+body {
+    background-color: #c4d3dd;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2em;
+}
+
+.white-shadow {
+  -moz-box-shadow:    3px 3px 0px 0px #fff;
+  -webkit-box-shadow: 3px 3px 0px 0px #fff;
+  box-shadow:         3px 3px 0px 0px #fff;
+}
+
 #main {
   width:80%;
   margin: 0 auto;
 }
 
 #main-controls {
-  float: left;
-  width: 20%;
+  margin-top: 20px;
+  margin-left: 50px;
+  height: 50px;
+}
+
+#main-controls div {
+  display: inline-block;
+  padding-right: 45px;
+}
+
+#main-controls #restart {
+  font-size: .7em;
 }
 
 #game-holder {
-  float: left;
-  width: 780px;
+  min-width: 550px;
+  max-width: 1200px;
 }
 
 #memory-game li {
@@ -26,21 +48,40 @@
   float: left;
 }
 
-i.zmdi {
+#memory-game i.fa {
   color: white;
-  font-size: 4em;
+  font-size: 3em;
   align-self: center;
+  display: none;
 }
 
-i.zmdi.zmdi-star, i.zmdi.zmdi-undo  {
+i.fa.fa-diamond, i.fa.fa-restart  {
   color: black;
-  font-size: 2em;
+}
+
+i.fa.fa-diamond  {
+  font-size: 1.8em;
 }
 
 .card {
-
+  /*http://lea.verou.me/css3patterns/*/
+  background:
+  linear-gradient(63deg, #999 23%, transparent 23%) 7px 0,
+  linear-gradient(63deg, transparent 74%, #999 78%),
+  linear-gradient(63deg, transparent 34%, #999 38%, #999 58%, transparent 62%),
+  #444;
+  background-size: 16px 48px;
 }
-.card:hover {
+
+.card.open, .card.match {
+  transform: rotateY(0);
+}
+
+#memory-game .card.open i, #memory-game .card.match i {
+  display: inline-block;
+}
+
+.card:hover, #restart:hover {
   cursor: pointer;
 }
 
@@ -48,5 +89,5 @@ i.zmdi.zmdi-star, i.zmdi.zmdi-undo  {
   background-color: #999;
 }
 
-/*Possible 3d effect
+/*Cool 3d effect
 https://desandro.github.io/3dtransforms/docs/card-flip.html*/
