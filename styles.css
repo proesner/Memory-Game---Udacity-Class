@@ -27,6 +27,10 @@ body {
   padding-right: 45px;
 }
 
+#main-controls #star-rating {
+  width: 150px;
+}
+
 #main-controls #restart {
   font-size: .7em;
 }
@@ -73,10 +77,6 @@ i.fa.fa-diamond  {
   background-size: 16px 48px;
 }
 
-.card.open, .card.match {
-  transform: rotateY(0);
-}
-
 #memory-game .card.open i, #memory-game .card.match i {
   display: inline-block;
 }
@@ -85,9 +85,6 @@ i.fa.fa-diamond  {
   cursor: pointer;
 }
 
-.card.open {
-  background-color: #999;
-}
 
 /*Cool 3d effect
 https://desandro.github.io/3dtransforms/docs/card-flip.html*/
