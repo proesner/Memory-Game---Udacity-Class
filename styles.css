@@ -1,44 +1,45 @@
-/*CSS file*/
+/*Base Styles*/
 body {
     background-color: #c4d3dd;
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Open Sans", sans-serif;
     font-size: 1.2em;
 }
 
-.white-shadow {
-  -moz-box-shadow:    3px 3px 0px 0px #fff;
-  -webkit-box-shadow: 3px 3px 0px 0px #fff;
-  box-shadow:         3px 3px 0px 0px #fff;
-}
 
 #main {
   width:80%;
   margin: 0 auto;
 }
 
+/*Main Controls & Child Elements*/
 #main-controls {
   margin-top: 20px;
   margin-left: 50px;
   height: 50px;
 }
 
+
 #main-controls div {
   display: inline-block;
   padding-right: 45px;
 }
 
+
 #main-controls #star-rating {
   width: 150px;
 }
+
 
 #main-controls #restart {
   font-size: .7em;
 }
 
+
 #game-holder {
   min-width: 550px;
   max-width: 1200px;
 }
+
 
 #memory-game li {
   display: flex;
@@ -52,20 +53,30 @@ body {
   float: left;
 }
 
+
 #memory-game i.fa {
   color: white;
   font-size: 3em;
   align-self: center;
-  display: none;
+  /*display: none;*/
 }
 
-i.fa.fa-diamond, i.fa.fa-restart  {
+/*Cards*/
+.white-shadow {
+  -moz-box-shadow:    3px 3px 0px 0px #fff;
+  -webkit-box-shadow: 3px 3px 0px 0px #fff;
+  box-shadow:         3px 3px 0px 0px #fff;
+}
+
+i.fa.fa-diamond, i.fa.fa-restart {
   color: black;
 }
 
-i.fa.fa-diamond  {
+
+i.fa.fa-diamond {
   font-size: 1.8em;
 }
+
 
 .card {
   /*http://lea.verou.me/css3patterns/*/
@@ -77,9 +88,11 @@ i.fa.fa-diamond  {
   background-size: 16px 48px;
 }
 
+
 #memory-game .card.open i, #memory-game .card.match i {
   display: inline-block;
 }
+
 
 .card:hover, #restart:hover {
   cursor: pointer;
