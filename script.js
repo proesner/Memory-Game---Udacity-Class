@@ -7,17 +7,17 @@ var $ratingEl = $mainControls.find('#star-rating');
 var $ratingElItems = $ratingEl.find('i');
 
 var cardSymbol = ["address-book", "address-book",
-    "adjust", "adjust",
-    "area-chart", "area-chart",
-    "asl-interpreting", "asl-interpreting",
-    "audio-description", "audio-description",
-    "bank", "bank",
-    "battery-4", "battery-4",
-    "bell", "bell",
-    "bluetooth", "bluetooth",
-    "calculator", "calculator",
-    "camera-retro", "camera-retro",
-    "coffee", "coffee"
+    // "adjust", "adjust",
+    // "area-chart", "area-chart",
+    // "asl-interpreting", "asl-interpreting",
+    // "audio-description", "audio-description",
+    // "bank", "bank",
+    // "battery-4", "battery-4",
+    // "bell", "bell",
+    // "bluetooth", "bluetooth",
+    // "calculator", "calculator",
+    // "camera-retro", "camera-retro",
+    // "coffee", "coffee"
 ];
 
 var flipped = [];
@@ -29,9 +29,9 @@ var cardPairs = cardSymbol.length / 2;
 
 // game timer
 // Reference: https://stackoverflow.com/questions/19429890/javascript-timer-just-for-minutes-and-seconds
-var date = new Date();
-var sec = date.getSeconds();
-var min = date.getMinutes();
+var sec = 0;
+var min = 0;
+var getTime;
 var handler = function() {
     sec++;
     if (sec == 60) {
@@ -39,8 +39,8 @@ var handler = function() {
         min++;
         if (min == 60) min = 0;
     }
+    return (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
 };
-handler();
 setInterval(handler, 1000);
 
 // shuffle the deck
@@ -59,8 +59,11 @@ function shuffle(a) {
 function go() {
     $memoryGame.empty(); // clear deck
     shuffle(cardSymbol);
+    // reset vars
     match = 0;
     moves = 0;
+    sec = 0;
+    min = 0;
     $movesEl.html(moves);
     for (var i = 0; i < cardSymbol.length; i++) {
         $memoryGame.append($('<li class="card white-shadow animated"><i class="fa fa-' +
@@ -112,7 +115,6 @@ $memoryGame.on('click', '.card:not(".match, .open")', function() {
                 $memoryGame.find('.match').removeClass('open opened infinite bounce');
             }, longDelay);
             match++; // verified match count up
-            console.log('cardPairs ' + cardPairs + 'match' + match);
         } else {
             setTimeout(function() {
                 $memoryGame.find('.open').removeClass('open opened');
@@ -129,19 +131,14 @@ $memoryGame.on('click', '.card:not(".match, .open")', function() {
     if (cardPairs === match) {
         var loot = setDiamonds(moves).loot; // get latest diamond count
         setTimeout(function() {
-            alertify.confirm('Congrats! It took you ' + moves + ' in ' + moves +
+            alertify.confirm('Congrats! It took you ' + handler() + ' in ' + moves +
                 ' moves, and have ' + loot + ' diamonds left. Would you like to play again?',
                 function() {
                     go();
                 },
                 function() {
-                    window.location.href = 'https://www.google.com';
-                }).set({
-                labels: {
-                    ok: 'Play Again',
-                    cancel: 'Play around on the net?'
-                }
-            });
+                    return;
+                });
         }, standardDelay);
     }
 })
