@@ -1,6 +1,7 @@
-// setup letiables
+// setup variables
 let $memoryGame = $('#memory-game');
 let $mainControls = $('#main-controls');
+let $timer = $('#timer');
 let $restartBtn = $mainControls.find('#restart');
 let $movesEl = $mainControls.find('#moves span');
 let $ratingEl = $mainControls.find('#star-rating');
@@ -26,14 +27,15 @@ let moves = 0;
 let standardDelay = 1000;
 let longDelay = standardDelay * 2;
 let cardPairs = cardSymbol.length / 2;
+let diamonds = $ratingElItems.length;
 
 // game timer
 // Reference: https://stackoverflow.com/questions/19429890/javascript-timer-just-for-minutes-and-seconds
 let sec = 0;
 let min = 0;
 let getTime;
+let intId;
 let timerHandler = function() {
-    sec++;
     if (sec == 60) {
         sec = 0;
         min++;
@@ -41,7 +43,6 @@ let timerHandler = function() {
     }
     return (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
 };
-setInterval(timerHandler, 1000);
 
 /**
 * @description Shuffle the deck
@@ -67,11 +68,15 @@ function shuffle(a) {
 function go() {
     $memoryGame.empty(); // clear deck
     shuffle(cardSymbol);
-    // reset lets
+    // reset vars
     match = 0;
     moves = 0;
     sec = 0;
     min = 0;
+    intId = setInterval(function () {
+        sec++;
+        $timer.text(timerHandler());
+    }, 1000);
     $movesEl.html(moves);
     for (let i = 0; i < cardSymbol.length; i++) {
         $memoryGame.append($('<li class="card white-shadow animated"><i class="fa fa-' +
@@ -86,15 +91,15 @@ function go() {
 Reference: https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
 */
 function setDiamonds(moves) {
-    let diamonds = 3;
-    if (moves > 10 && moves < 20) {
+    if (moves > 1 && moves < 12) {
         $ratingElItems.eq(2).remove();
-        diamonds = 2;
-    } else if (moves > 21 && moves < 28) {
+        diamonds--;
+    } else if (moves > 12 && moves < 20) {
         $ratingElItems.eq(1).remove();
-        diamonds = 1;
-    } else if (moves > 29) {
-        $ratingElItems.eq(0).removeClass('fa fa-diamond').html('Outta diamonds!');
+        diamonds--;
+    } else if (moves > 20) {
+        $ratingElItems.eq(0).removeClass('fa fa-diamond');
+        $ratingEl.html('Outta diamonds!');;
         diamonds = 0;
     }
     return {
@@ -143,6 +148,7 @@ $memoryGame.on('click', '.card:not(".match, .open")', function() {
     // endgame if all cards are flipped
     if (cardPairs === match) {
         let loot = setDiamonds(moves).loot; // get latest diamond count
+        clearInterval(intId);
         setTimeout(function() {
             alertify.confirm('Congrats! It took you ' + timerHandler() + ' in ' + moves +
                 ' moves, and have ' + loot + ' diamonds left. Would you like to play again?',
@@ -163,7 +169,7 @@ $restartBtn.on('click', function() {
             go(); // restart game
         },
         function() {
-            return // cancel button
+            return; // cancel button
         });
 })
 
