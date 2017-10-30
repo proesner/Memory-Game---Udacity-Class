@@ -8,17 +8,17 @@ let $ratingEl = $mainControls.find('#star-rating');
 let $ratingElItems = $ratingEl.find('i');
 
 let cardSymbol = ["address-book", "address-book",
-    "adjust", "adjust",
-    "area-chart", "area-chart",
-    "asl-interpreting", "asl-interpreting",
-    "audio-description", "audio-description",
-    "bank", "bank",
-    "battery-4", "battery-4",
-    "bell", "bell",
-    "bluetooth", "bluetooth",
-    "calculator", "calculator",
-    "camera-retro", "camera-retro",
-    "coffee", "coffee"
+    // "adjust", "adjust",
+    // "area-chart", "area-chart",
+    // "asl-interpreting", "asl-interpreting",
+    // "audio-description", "audio-description",
+    // "bank", "bank",
+    // "battery-4", "battery-4",
+    // "bell", "bell",
+    // "bluetooth", "bluetooth",
+    // "calculator", "calculator",
+    // "camera-retro", "camera-retro",
+    // "coffee", "coffee"
 ];
 
 let flipped = [];
@@ -73,10 +73,9 @@ function go() {
     moves = 0;
     sec = 0;
     min = 0;
-    intId = setInterval(function () {
-        sec++;
-        $timer.text(timerHandler());
-    }, 1000);
+    clearInterval(intId);
+    intId = null;
+    $timer.text(timerHandler());
     $movesEl.html(moves);
     for (let i = 0; i < cardSymbol.length; i++) {
         $memoryGame.append($('<li class="card white-shadow animated"><i class="fa fa-' +
@@ -110,6 +109,12 @@ function setDiamonds(moves) {
 // on click card behavior
 // Reference: https://stackoverflow.com/questions/9478413/not-selector-on-click-event
 $memoryGame.on('click', '.card:not(".match, .open")', function() {
+    if (!intId) {
+        intId = setInterval(function () {
+            sec++;
+            $timer.text(timerHandler());
+        }, 1000);
+    }
     if ($('.opened').length > 1) {
         return true;
     } //if card opened, no click event on that card
