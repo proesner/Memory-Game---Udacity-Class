@@ -4,21 +4,22 @@ let $mainControls = $('#main-controls');
 let $timer = $('#timer');
 let $restartBtn = $mainControls.find('#restart');
 let $movesEl = $mainControls.find('#moves span');
-let $ratingEl = $mainControls.find('#star-rating');
+let $ratingEl = $mainControls.find('#diamond-rating');
 let $ratingElItems = $ratingEl.find('i');
+let $diamondsEl = $ratingEl.html();
 
 let cardSymbol = ["address-book", "address-book",
-    // "adjust", "adjust",
-    // "area-chart", "area-chart",
-    // "asl-interpreting", "asl-interpreting",
-    // "audio-description", "audio-description",
-    // "bank", "bank",
-    // "battery-4", "battery-4",
-    // "bell", "bell",
-    // "bluetooth", "bluetooth",
-    // "calculator", "calculator",
-    // "camera-retro", "camera-retro",
-    // "coffee", "coffee"
+    "adjust", "adjust",
+    "area-chart", "area-chart",
+    "asl-interpreting", "asl-interpreting",
+    "audio-description", "audio-description",
+    "bank", "bank",
+    "battery-4", "battery-4",
+    "bell", "bell",
+    "bluetooth", "bluetooth",
+    "calculator", "calculator",
+    "camera-retro", "camera-retro",
+    "coffee", "coffee"
 ];
 
 let flipped = [];
@@ -27,7 +28,7 @@ let moves = 0;
 let standardDelay = 1000;
 let longDelay = standardDelay * 2;
 let cardPairs = cardSymbol.length / 2;
-let diamonds = $ratingElItems.length;
+let diamonds;
 
 // game timer
 // Reference: https://stackoverflow.com/questions/19429890/javascript-timer-just-for-minutes-and-seconds
@@ -73,10 +74,13 @@ function go() {
     moves = 0;
     sec = 0;
     min = 0;
+    diamonds = 3;
+    $ratingEl.html($ratingElItems);
+    $movesEl.html(moves);
+    $timer.text(timerHandler());
+
     clearInterval(intId);
     intId = null;
-    $timer.text(timerHandler());
-    $movesEl.html(moves);
     for (let i = 0; i < cardSymbol.length; i++) {
         $memoryGame.append($('<li class="card white-shadow animated"><i class="fa fa-' +
             cardSymbol[i] + '"></i></li>'));
@@ -90,19 +94,16 @@ function go() {
 Reference: https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
 */
 function setDiamonds(moves) {
-    if (moves > 1 && moves < 12) {
+    if (moves > 2 && moves < 20) {
         $ratingElItems.eq(2).remove();
-        diamonds--;
-    } else if (moves > 12 && moves < 20) {
+        diamonds = 2;
+    } else if (moves > 21 && moves < 30) {
         $ratingElItems.eq(1).remove();
-        diamonds--;
-    } else if (moves > 20) {
-        $ratingElItems.eq(0).removeClass('fa fa-diamond');
-        $ratingEl.html('Outta diamonds!');;
-        diamonds = 0;
+        diamonds = 1;
     }
+    console.log(diamonds);
     return {
-        loot: diamonds
+        diamonds
     };
 }
 
@@ -152,11 +153,10 @@ $memoryGame.on('click', '.card:not(".match, .open")', function() {
 
     // endgame if all cards are flipped
     if (cardPairs === match) {
-        let loot = setDiamonds(moves).loot; // get latest diamond count
         clearInterval(intId);
         setTimeout(function() {
             alertify.confirm('Congrats! It took you ' + timerHandler() + ' in ' + moves +
-                ' moves, and have ' + loot + ' diamonds left. Would you like to play again?',
+                ' moves, and have ' + diamonds + ' diamonds left. Would you like to play again?',
                 function() {
                     go(); // restart game
                 },

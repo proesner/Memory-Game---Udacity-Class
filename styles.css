@@ -26,6 +26,10 @@ body {
   width: 180px;
 }
 
+#main-controls #diamond-rating i {
+  margin-right: 5px;
+}
+
 #main-controls #restart {
   font-size: .7em;
 }
